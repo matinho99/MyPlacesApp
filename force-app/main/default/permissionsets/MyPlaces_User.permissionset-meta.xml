@@ -4,6 +4,10 @@
         <application>My_Places</application>
         <visible>true</visible>
     </applicationVisibilities>
+    <classAccesses>
+        <apexClass>PlaceSearchController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <fieldPermissions>
         <editable>false</editable>
         <field>Place__c.City__c</field>
@@ -13,11 +17,6 @@
         <editable>false</editable>
         <field>Place__c.Country__c</field>
         <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Place__c.Google_Place_Id__c</field>
-        <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
