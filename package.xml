@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>PlaceSearchController</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
         <members>My_Places</members>
         <name>CustomApplication</name>
     </types>
     <types>
+        <members>Place_Search</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
         <members>List_Place__c</members>
         <members>List__c</members>
+        <members>MyPlaces_Settings__c</members>
         <members>Place__c</members>
         <name>CustomObject</name>
     </types>
     <types>
         <members>Place_Search</members>
         <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>placeSearch</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <types>
+        <members>MyPlacesMC</members>
+        <name>LightningMessageChannel</name>
     </types>
     <types>
         <members>MyPlaces_Admin</members>
@@ -22,6 +39,14 @@
     <types>
         <members>MyPlaces User</members>
         <name>Profile</name>
+    </types>
+    <types>
+        <members>Google_Places_API</members>
+        <name>RemoteSiteSetting</name>
+    </types>
+    <types>
+        <members>leaflet</members>
+        <name>StaticResource</name>
     </types>
     <version>51.0</version>
 </Package>

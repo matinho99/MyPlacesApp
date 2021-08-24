@@ -1,0 +1,28 @@
+<template>
+    <lightning-layout multiple-rows>
+        <lightning-spinner if:true={isLoading} variant="brand"></lightning-spinner>
+        <lightning-layout-item class="slds-p-bottom_small" size="12">
+            <article class="slds-card">
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+                            <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default slds-align_absolute-center" size="x-small" icon-name="utility:search"></lightning-icon>
+                            <input type="text" id="placeSearchInput" placeholder="Search here" class="slds-input" oninput={handleInputChange} onkeydown={handleEnter}/>
+                        </div>
+                        <!-- <div class="slds-align_absolute-center slds-p-top_small">
+                            <button if:false={inputEmpty} class="slds-button slds-button_brand" onclick={search}>Search</button>
+                            <button if:true={inputEmpty} class="slds-button slds-button_brand" disabled>Search</button>
+                        </div> -->
+                    </div>
+                </div>
+            </article>
+        </lightning-layout-item>
+        <lightning-layout-item size="12">
+            <article class="slds-card">
+                <div class="slds-card__body slds-card__body_inner slds-m-around_none slds-p-around_xx-small">
+                    <div class="map slds-map"></div>
+                </div>
+            </article>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>
