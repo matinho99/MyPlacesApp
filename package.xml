@@ -9,10 +9,15 @@
         <name>CustomApplication</name>
     </types>
     <types>
+        <members>Feature_Setting.Place_Search</members>
+        <name>CustomMetadata</name>
+    </types>
+    <types>
         <members>Place_Search</members>
         <name>CustomTab</name>
     </types>
     <types>
+        <members>Feature_Setting__mdt</members>
         <members>List_Place__c</members>
         <members>List__c</members>
         <members>MyPlaces_Settings__c</members>
@@ -24,6 +29,7 @@
         <name>FlexiPage</name>
     </types>
     <types>
+        <members>map</members>
         <members>placeSearch</members>
         <name>LightningComponentBundle</name>
     </types>

@@ -61,7 +61,7 @@ public with sharing class PlaceSearchController {
             'key=' + EncodingUtil.urlEncode(GOOGLE_PLACES_API_KEY, 'UTF-8'),
             'language=en',
             'place_id=' + EncodingUtil.urlEncode(place.place_id, 'UTF-8'),
-            'fields=address_component,opening_hours'
+            'fields=address_component,opening_hours,international_phone_number,website'
         }, '&');
         req.setEndpoint(GOOGLE_PLACES_DETAILS_ENDPOINT + '?' + args);
         req.setMethod('GET');
@@ -71,6 +71,8 @@ public with sharing class PlaceSearchController {
             DetailResult result = (DetailResult)JSON.deserialize(res.getBody(), DetailResult.class);
             place.address_components = result.result.address_components;
             place.opening_hours = result.result.opening_hours;
+            place.international_phone_number = result.result.international_phone_number;
+            place.website = result.result.website;
         }
     }
 
@@ -82,7 +84,7 @@ public with sharing class PlaceSearchController {
             'photo_reference=' + EncodingUtil.urlEncode(place.photos[0].photo_reference, 'UTF-8'),
             'maxwidth=400'
         }, '&');
-        req.setEndpoint('https://maps.googleapis.com/maps/api/place/photo' + '?' + args);
+        req.setEndpoint(GOOGLE_PLACES_PHOTOS_ENDPOINT + '?' + args);
         req.setMethod('GET');
         HttpResponse res = http.send(req);
 
@@ -109,6 +111,12 @@ public with sharing class PlaceSearchController {
         
         @AuraEnabled
         public String formatted_address;
+
+        @AuraEnabled
+        public String international_phone_number;
+
+        @AuraEnabled
+        public String website;
         
         @AuraEnabled
         public Decimal rating;
