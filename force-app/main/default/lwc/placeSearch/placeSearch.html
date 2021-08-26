@@ -6,7 +6,10 @@
                 <div class="slds-card__body slds-card__body_inner">
                     <div class="slds-form-element">
                         <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
-                            <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default slds-align_absolute-center" size="x-small" icon-name="utility:search"></lightning-icon>
+                            <svg class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default" aria-hidden="true">
+                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#search"></use>
+                            </svg>
+                            <!-- <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default slds-align_absolute-center" size="x-small" icon-name="utility:search"></lightning-icon> -->
                             <input type="text" id="placeSearchInput" placeholder="Search here" class="slds-input" oninput={handleInputChange} onkeydown={handleEnter}/>
                         </div>
                         <!-- <div class="slds-align_absolute-center slds-p-top_small">
@@ -18,11 +21,8 @@
             </article>
         </lightning-layout-item>
         <lightning-layout-item size="12">
-            <article class="slds-card">
-                <div class="slds-card__body slds-card__body_inner slds-m-around_none slds-p-around_xx-small">
-                    <div class="map slds-map"></div>
-                </div>
-            </article>
+                    <!-- <div class="map slds-map"></div> -->
+                    <c-map feature-name="Place_Search" context-name="map" places={searchResult.results}></c-map>
         </lightning-layout-item>
     </lightning-layout>
 </template>
