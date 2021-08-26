@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Place Search</label>
+    <protected>false</protected>
+    <values>
+        <field>Active__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Properties_JSON__c</field>
+        <value xsi:type="xsd:string">{
+  &quot;map&quot;: {
+    &quot;options&quot;: [
+      {
+        &quot;name&quot;: &quot;tap&quot;,
+        &quot;value&quot;: false
+      }
+    ],
+    &quot;features&quot;: [
+      {
+        &quot;name&quot;: &quot;tileLayer&quot;,
+        &quot;urlTemplate&quot;: &quot;&quot;,
+        &quot;options&quot;: []
+      },
+      {
+        &quot;name&quot;: &quot;geolocation&quot;,
+        &quot;showMarker&quot;: true,
+        &quot;markerConfig&quot;: &quot;user&quot;,
+        &quot;options&quot;: [
+          {
+            &quot;name&quot;: &quot;setView&quot;,
+            &quot;value&quot;: true
+          },
+          {
+            &quot;name&quot;: &quot;maxZoom&quot;,
+            &quot;value&quot;: 13
+          },
+          {
+            &quot;name&quot;: &quot;enableHighAccuracy&quot;,
+            &quot;value&quot;: true
+          }
+        ]
+      },
+      {
+        &quot;name&quot;: &quot;places&quot;,
+        &quot;markerConfig&quot;: &quot;place&quot;
+      }
+    ],
+    &quot;markerConfigs&quot;: [
+      {
+        &quot;name&quot;: &quot;user&quot;,
+        &quot;popupConfig&quot;: &quot;user&quot;,
+        &quot;options&quot;: [
+          {
+            &quot;name&quot;: &quot;title&quot;,
+            &quot;value&quot;: &quot;You&quot;
+          },
+          {
+            &quot;name&quot;: &quot;icon&quot;,
+            &quot;function&quot;: &quot;return that.icons.standardRed;&quot;
+          }
+        ]
+      },
+      {
+        &quot;name&quot;: &quot;place&quot;,
+        &quot;coordinatesFunction&quot;: &quot;return [place.geometry.location.lat, place.geometry.location.lng];&quot;,
+        &quot;options&quot;: [
+          {
+            &quot;name&quot;: &quot;title&quot;,
+            &quot;function&quot;: &quot;return place.name;&quot;
+          },
+          {
+            &quot;name&quot;: &quot;icon&quot;,
+            &quot;function&quot;: &quot;return that.icons.standardBlue;&quot;
+          }
+        ],
+        &quot;popupConfig&quot;: &quot;place&quot;,
+        &quot;markerDataFunction&quot;: &quot;return { googlePlaceId: place.place_id };&quot;
+      }
+    ],
+    &quot;popupConfigs&quot;: [
+      {
+        &quot;name&quot;: &quot;user&quot;,
+        &quot;content&quot;: &quot;You are here&quot;,
+        &quot;options&quot;: [
+          {
+            &quot;name&quot;: &quot;closeButton&quot;,
+            &quot;value&quot;: false
+          }
+        ]
+      },
+      {
+        &quot;name&quot;: &quot;place&quot;,
+        &quot;contentFunction&quot;: &quot;return \&quot;&lt;b&gt;\&quot; + place.name + \&quot;&lt;/b&gt;&lt;br&gt;\&quot; + place.formatted_address&quot;,
+        &quot;options&quot;: [
+          {
+            &quot;name&quot;: &quot;closeButton&quot;,
+            &quot;value&quot;: false
+          }
+        ]
+      }
+    ],
+    &quot;tooltipConfigs&quot;: [],
+    &quot;customIcons&quot;: [
+      {
+        &quot;name&quot;: &quot;&quot;,
+        &quot;options&quot;: []
+      }
+    ]
+  },
+  &quot;placesList&quot;: {}
+}</value>
+    </values>
+</CustomMetadata>
