@@ -1,7 +1,7 @@
 <template>
     <lightning-layout multiple-rows>
         <lightning-spinner if:true={isLoading} variant="brand"></lightning-spinner>
-        <lightning-layout-item class="slds-p-bottom_small" size="12">
+        <lightning-layout-item class="slds-p-bottom_x-small" size="12">
             <article class="slds-card">
                 <div class="slds-card__body slds-card__body_inner">
                     <div class="slds-form-element">
@@ -22,7 +22,7 @@
         </lightning-layout-item>
         <lightning-layout-item size="12">
                     <!-- <div class="map slds-map"></div> -->
-                    <c-map feature-name="Place_Search" context-name="map" places={searchResult.results}></c-map>
+                    <c-map feature-name="Place_Search" context-name="map" places={searchResult.results} onplaceclick={handlePlaceClick}></c-map>
         </lightning-layout-item>
     </lightning-layout>
 </template>

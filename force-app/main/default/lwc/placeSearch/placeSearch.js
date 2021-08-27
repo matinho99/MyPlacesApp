@@ -31,6 +31,10 @@ export default class PlaceSearch extends LightningElement {
         }
     }
 
+    handlePlaceClick(event) {
+        console.log('handlePlaceClick', event.detail.googlePlaceId);
+    }
+
     search() {
         this.isLoading = true;
 

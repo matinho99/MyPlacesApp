@@ -141,13 +141,42 @@ export default class Map extends LightningElement {
             console.log(markerConfig, popupConfig, tooltipConfig);
 
             (places || []).forEach(place => {
-                let location = this.getMarkerLocation(markerConfig, place);
+                let location = this.getPlaceLocation(markerConfig, place);
                 let marker = this.addMarker(location, markerConfig, popupConfig, tooltipConfig, place);
+                marker.on('click', (event) => this.dispatchEvent(new CustomEvent('placeclick', { detail: event.target.appData })) );
                 this.mapMarkers.push(marker);
             });
 
             this.map.fitBounds((this.mapMarkers).map(marker => marker._latlng));
         }
+    }
+
+    getPlaceLocation(markerConfig, place) {
+        let location = null;
+
+        if(markerConfig && markerConfig.coordinatesFunction) {
+            location = Function('place', markerConfig.coordinatesFunction)(place);
+        }
+
+        return location;
+    }
+
+    addMarker(location, markerConfig, popupConfig, tooltipConfig, place) {
+        let marker = L.marker(location, this.getOptionsObject(markerConfig, place)).addTo(this.map);
+                    
+        if(popupConfig) {
+            marker.bindPopup(this.getPopupContent(popupConfig, place), this.getOptionsObject(popupConfig, place));
+        }
+
+        if(tooltipConfig) {
+            marker.bindTooltip(this.getTooltipContent(tooltipConfig, place), this.getOptionsObject(tooltipConfig, place))
+        }
+
+        if(markerConfig.markerDataFunction) {
+            marker.appData = Function('place', markerConfig.markerDataFunction)(place);
+        }
+
+        return marker;
     }
 
     clearMarkers() {
@@ -171,34 +200,6 @@ export default class Map extends LightningElement {
         
         console.log(optionsObj);
         return optionsObj;
-    }
-
-    addMarker(location, markerConfig, popupConfig, tooltipConfig, place) {
-        let marker = L.marker(location, this.getOptionsObject(markerConfig, place)).addTo(this.map);
-                    
-        if(popupConfig) {
-            marker.bindPopup(this.getPopupContent(popupConfig, place), this.getOptionsObject(popupConfig, place));
-        }
-
-        if(tooltipConfig) {
-            marker.bindTooltip(this.getTooltipContent(tooltipConfig, place), this.getOptionsObject(tooltipConfig, place))
-        }
-
-        if(markerConfig.markerDataFunction) {
-            marker.appData = Function('place', markerConfig.markerDataFunction)(place);
-        }
-
-        return marker;
-    }
-
-    getMarkerLocation(markerConfig, place) {
-        let location = null;
-
-        if(markerConfig && markerConfig.coordinatesFunction) {
-            location = Function('place', markerConfig.coordinatesFunction)(place);
-        }
-
-        return location;
     }
 
     getPopupContent(popupConfig, place) {
