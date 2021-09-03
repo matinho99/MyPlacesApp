@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>PlaceSearchController</members>
+        <members>MapService</members>
+        <members>PlaceSearchService</members>
+        <members>TilesListService</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -29,8 +31,15 @@
         <name>FlexiPage</name>
     </types>
     <types>
+        <members>MyPlaces_Admins</members>
+        <members>MyPlaces_Users</members>
+        <name>Group</name>
+    </types>
+    <types>
         <members>map</members>
         <members>placeSearch</members>
+        <members>tile</members>
+        <members>tilesList</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>
@@ -43,6 +52,7 @@
         <name>PermissionSet</name>
     </types>
     <types>
+        <members>MyPlaces Admin</members>
         <members>MyPlaces User</members>
         <name>Profile</name>
     </types>
