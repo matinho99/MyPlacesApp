@@ -1,0 +1,30 @@
+.tile {
+    height: 100%;
+    border: 1px solid lightgray;
+    border-radius: var(--lwc-borderRadiusSmall);
+}
+
+.selectedTile {
+    height: 100%;
+    border: 2px solid var(--lwc-colorBorderBrand);
+}
+
+.tileHeader {
+    min-height: 60px;
+    background-position: center;
+    background-size: cover;
+}
+
+.boldTitle {
+    font-size: 0.875rem;
+    font-weight: var(--lwc-fontWeightBold, 700);
+}
+
+.boldLabel {
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.regularText {
+    font-size: 0.75rem;
+}

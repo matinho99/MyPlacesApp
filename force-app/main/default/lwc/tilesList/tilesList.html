@@ -1,0 +1,12 @@
+<template>
+    <article class="mainContainer slds-card">
+        <div class={gridClass}>
+            <template if:true={privateRecords} for:each={privateRecords} for:item="rec">
+                <div key={rec.idx} class={gridColClass} style="height: inherit;">
+                    <c-tile record={rec} actions={tileActions} selected-record-idx={selectedRecordIdx} onclick={tileClicked} ontileaction={handleTileAction}></c-tile>
+                </div>
+            </template>
+            <div if:false={privateRecords} class="slds-text-color_weak slds-align_absolute-center slds-p-around_medium">No data to display</div>
+        </div>
+    </article>
+</template>

@@ -1,0 +1,76 @@
+<template>
+    <div if:true={privateRecord} class={tileClass}>
+        <div class="tileHeader" style={headerStyle}>
+            <div if:false={privateRecord.headerImageUrl} class="slds-text-body_regular slds-text-color_weak slds-align_absolute-center slds-p-around_medium">No photo available</div>
+        </div>
+        <div class="slds-p-around_xx-small slds-border_top">
+            <div if:true={privateRecord.title} class="boldTitle">{privateRecord.title}</div>
+            <template for:each={privateRecord.fields} for:item="field">
+                <div key={field.name} class="slds-grid slds-p-vertical_xxx-small">
+                    <div if:true={field.iconUrl} class="slds-col slds-no-flex slds-icon_container slds-align-middle slds-m-right_x-small">
+                        <svg class="slds-icon slds-icon-text-default slds-icon_x-small" aria-hidden="true">
+                            <use xlink:href={field.iconUrl}></use>
+                        </svg>
+                    </div>
+                    <div class="slds-col">
+                        <p if:true={field.label} class="boldLabel">{field.label}</p>
+                        <p class="regularText">
+                            <a if:true={field.isAddress} title={field.value} href={field.href} target="_blank">{field.value}</a>
+                            <lightning-formatted-email if:true={field.isEmail} value={field.value}></lightning-formatted-email>
+                            <lightning-formatted-number if:true={field.isNumber} value={field.value}></lightning-formatted-number>
+                            <lightning-formatted-phone if:true={field.isPhone} value={field.value}></lightning-formatted-phone>
+                            <lightning-formatted-url if:true={field.isUrl} value={field.value} target="_blank"></lightning-formatted-url>
+                            <span if:true={field.isText}>{field.value}</span>
+                        </p>
+                    </div>
+                </div>
+            </template>
+            <div if:true={actions} class="slds-grid slds-gutters_xx-small slds-grid_align-center slds-wrap slds-p-top_x-small">
+                <template for:each={actions} for:item="action">
+                    <div key={action.name} class="slds-col regularText">
+                        <button if:true={action.hasIconTop} class={action.class} style={action.style} data-action-name={action.name} onclick={actionClicked}>
+                            <div class="slds-grid slds-grid_vertical">
+                                <div class="slds-col slds-current-color">
+                                    <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                                        <use xlink:href={action.iconUrl}></use>
+                                    </svg>
+                                </div>
+                                <div class="slds-col">{action.label}</div>
+                            </div>
+                        </button>
+                        <button if:false={action.hasIconTop} class={action.class} style={action.style} data-action-name={action.name} onclick={actionClicked}>
+                            <svg if:true={action.iconUrl} class="slds-button__icon slds-button__icon_left slds-icon_x-small slds-m-right_xx-small" aria-hidden="true">
+                                <use xlink:href={action.iconUrl}></use>
+                            </svg>
+                            {action.label}
+                        </button>
+                    </div>
+                </template>
+                <!-- <div class="slds-col">
+                    <button class="slds-button" style="line-height: normal;">
+                        <div class="slds-grid slds-grid_vertical">
+                            <div class="slds-col slds-current-color">
+                                <svg class="slds-icon slds-icon-text-default slds-icon_x-small" aria-hidden="true">
+                                    <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#bookmark"></use>
+                                </svg>
+                            </div>
+                            <div class="slds-col">Import</div>
+                        </div>
+                    </button>
+                </div>
+                <div class="slds-col">
+                    <button class="slds-button" style="line-height: normal;">
+                        <div class="slds-grid slds-grid_vertical">
+                            <div class="slds-col slds-current-color">
+                                <svg class="slds-icon slds-icon-text-default slds-icon_x-small" aria-hidden="true">
+                                    <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                </svg>
+                            </div>
+                            <div class="slds-col">Add to List</div>
+                        </div>
+                    </button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</template>

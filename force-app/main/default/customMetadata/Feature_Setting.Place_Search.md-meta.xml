@@ -57,7 +57,7 @@
           },
           {
             &quot;name&quot;: &quot;icon&quot;,
-            &quot;function&quot;: &quot;return that.icons.standardRed;&quot;
+            &quot;function&quot;: &quot;return icons.standardRed;&quot;
           }
         ]
       },
@@ -71,11 +71,10 @@
           },
           {
             &quot;name&quot;: &quot;icon&quot;,
-            &quot;function&quot;: &quot;return that.icons.standardBlue;&quot;
+            &quot;function&quot;: &quot;return icons.standardBlue;&quot;
           }
         ],
-        &quot;popupConfig&quot;: &quot;place&quot;,
-        &quot;markerDataFunction&quot;: &quot;return { googlePlaceId: place.place_id };&quot;
+        &quot;popupConfig&quot;: &quot;place&quot;
       }
     ],
     &quot;popupConfigs&quot;: [
@@ -108,7 +107,53 @@
       }
     ]
   },
-  &quot;placesList&quot;: {}
+  &quot;placesList&quot;: {
+    &quot;isHorizontal&quot;: false,
+    &quot;tileLayout&quot;: {
+      &quot;headerImageUrlFieldName&quot;: &quot;photo_url&quot;,
+      &quot;titleFieldName&quot;: &quot;name&quot;,
+      &quot;titleStyle&quot;: &quot;&quot;,
+      &quot;fields&quot;: [
+        {
+          &quot;name&quot;: &quot;formatted_address&quot;,
+          &quot;label&quot;: &quot;&quot;,
+          &quot;icon&quot;: &quot;checkin&quot;,
+          &quot;type&quot;: &quot;address&quot;
+        },
+        {
+          &quot;name&quot;: &quot;international_phone_number&quot;,
+          &quot;label&quot;: &quot;&quot;,
+          &quot;icon&quot;: &quot;call&quot;,
+          &quot;type&quot;: &quot;phone&quot;
+        },
+        {
+          &quot;name&quot;: &quot;website&quot;,
+          &quot;label&quot;: &quot;&quot;,
+          &quot;icon&quot;: &quot;world&quot;,
+          &quot;type&quot;: &quot;url&quot;
+        }
+      ],
+      &quot;actions&quot;: [
+        {
+          &quot;name&quot;: &quot;import&quot;,
+          &quot;label&quot;: &quot;Import&quot;,
+          &quot;icon&quot;: &quot;bookmark&quot;,
+          &quot;hasIconTop&quot;: true,
+          &quot;buttonClass&quot;: &quot;&quot;,
+          &quot;buttonStyle&quot;: &quot;line-height: normal;&quot;,
+          &quot;displayConditionFunction&quot;: &quot;return !record.recordId;&quot;
+        },
+        {
+          &quot;name&quot;: &quot;addToList&quot;,
+          &quot;label&quot;: &quot;Add to List&quot;,
+          &quot;icon&quot;: &quot;add&quot;,
+          &quot;hasIconTop&quot;: true,
+          &quot;buttonClass&quot;: &quot;&quot;,
+          &quot;buttonStyle&quot;: &quot;line-height: normal;&quot;
+        }
+      ]
+    }
+  }
 }</value>
     </values>
 </CustomMetadata>
