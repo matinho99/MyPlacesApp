@@ -17,15 +17,14 @@ export default class Map extends LightningElement {
     @api contextName;
     @api featureName;
 
-    configLoaded = false;
     isRendered = false;
-    isReady = false;
     map = null;
     userLocation = null;
     icons = null;
-    data = null;
+    ctrlData = null;
     mapMarkers = null;
     privatePlaces = null;
+    privateSelectedPlaceIdx = null;
 
     @api
     get places() {
@@ -34,8 +33,25 @@ export default class Map extends LightningElement {
 
     set places(value) {
         this.privatePlaces = value;
-        console.log('privatePlaces', this.privatePlaces);
-        if(this.isRendered) this.preparePlaces(this.privatePlaces);
+        
+        if(this.isRendered) {
+            this.preparePlaces(this.privatePlaces); 
+        }
+    }
+
+    @api
+    get selectedPlaceIdx() {
+        return this.privateSelectedPlaceIdx;
+    }
+
+    set selectedPlaceIdx(value) {
+        this.privateSelectedPlaceIdx = value;
+        let marker = this.mapMarkers && this.mapMarkers[this.privateSelectedPlaceIdx] ? this.mapMarkers[this.privateSelectedPlaceIdx] : null;
+        
+        if(marker) {
+            marker.openPopup();
+            this.map.panTo(marker.getLatLng())
+        }
     }
 
     renderedCallback() {
@@ -59,7 +75,6 @@ export default class Map extends LightningElement {
             }));
         }).finally(() => {
             this.isRendered = true;
-            this.isReady = true;
         });
     }
 
@@ -68,23 +83,19 @@ export default class Map extends LightningElement {
             contextName: this.contextName,
             featureName: this.featureName
         }).then(data => {
-            console.log(data);
-            this.data = data;
-            this.configLoaded = true;
+            this.ctrlData = data;
         });
     }
 
     initMap() {
         let container = this.template.querySelector('div.map.slds-map');
-        this.map = L.map(container, this.getOptionsObject(this.data.config));
+        this.map = L.map(container, this.getOptionsObject(this.ctrlData.config));
         this.setupTileLayer();
         this.setupGeolocation();
-        console.log(this.map);
     }
 
     setupTileLayer() {
-        let tileLayerConfig = (this.data.config.features || []).find(feature => feature.name === 'tileLayer');
-        console.log(tileLayerConfig);
+        let tileLayerConfig = (this.ctrlData.config.features || []).find(feature => feature.name === 'tileLayer');
 
         if(tileLayerConfig && tileLayerConfig.urlTemplate) {
             L.tileLayer(tileLayerConfig.urlTemplate, this.getOptionsObject(tileLayerConfig)).addTo(this.map);
@@ -94,16 +105,16 @@ export default class Map extends LightningElement {
     }
 
     setupGeolocation() {
-        let geolocationConfig = (this.data.config.features || []).find(feature => feature.name === 'geolocation');
+        let geolocationConfig = (this.ctrlData.config.features || []).find(feature => feature.name === 'geolocation');
 
         if(geolocationConfig) {
             this.map.on('locationfound', event => {
                 this.userLocation = event.latlng;
 
                 if(geolocationConfig.showMarker) {
-                    let markerConfig = geolocationConfig.markerConfig ? (this.data.config.markerConfigs || []).find(mc => mc.name === geolocationConfig.markerConfig) : {};
-                    let popupConfig = (this.data.config.popupConfigs || []).find(pc => pc.name === markerConfig.popupConfig);
-                    let tooltipConfig = (this.data.config.tooltipConfigs || []).find(tc => tc.name === markerConfig.tooltipConfig);
+                    let markerConfig = geolocationConfig.markerConfig ? (this.ctrlData.config.markerConfigs || []).find(mc => mc.name === geolocationConfig.markerConfig) : {};
+                    let popupConfig = (this.ctrlData.config.popupConfigs || []).find(pc => pc.name === markerConfig.popupConfig);
+                    let tooltipConfig = (this.ctrlData.config.tooltipConfigs || []).find(tc => tc.name === markerConfig.tooltipConfig);
                     this.addMarker(this.userLocation, markerConfig, popupConfig, tooltipConfig);
                 }
             });
@@ -115,7 +126,7 @@ export default class Map extends LightningElement {
     initIcons() {
         this.icons = {};
 
-        (this.data.standardIcons || []).forEach(icon => {
+        (this.ctrlData.standardIcons || []).forEach(icon => {
             this.icons[icon.name] = L.icon({
                 iconUrl: icon.iconUrl,
                 iconRetinaUrl: icon.iconRetinaUrl,
@@ -132,13 +143,12 @@ export default class Map extends LightningElement {
     preparePlaces(places) {
         this.clearMarkers();
         this.mapMarkers = [];
-        let placesConfig = (this.data.config.features || []).find(feature => feature.name === 'places');
+        let placesConfig = (this.ctrlData.config.features || []).find(feature => feature.name === 'places');
 
         if(placesConfig) {
-            let markerConfig = placesConfig.markerConfig ? (this.data.config.markerConfigs || []).find(mc => mc.name === placesConfig.markerConfig) : {};
-            let popupConfig = (this.data.config.popupConfigs || []).find(pc => pc.name === markerConfig.popupConfig);
-            let tooltipConfig = (this.data.config.tooltipConfigs || []).find(tc => tc.name === markerConfig.tooltipConfig);
-            console.log(markerConfig, popupConfig, tooltipConfig);
+            let markerConfig = placesConfig.markerConfig ? (this.ctrlData.config.markerConfigs || []).find(mc => mc.name === placesConfig.markerConfig) : {};
+            let popupConfig = (this.ctrlData.config.popupConfigs || []).find(pc => pc.name === markerConfig.popupConfig);
+            let tooltipConfig = (this.ctrlData.config.tooltipConfigs || []).find(tc => tc.name === markerConfig.tooltipConfig);
 
             (places || []).forEach(place => {
                 let location = this.getPlaceLocation(markerConfig, place);
@@ -163,6 +173,7 @@ export default class Map extends LightningElement {
 
     addMarker(location, markerConfig, popupConfig, tooltipConfig, place) {
         let marker = L.marker(location, this.getOptionsObject(markerConfig, place)).addTo(this.map);
+        marker.appData = { place: place };
                     
         if(popupConfig) {
             marker.bindPopup(this.getPopupContent(popupConfig, place), this.getOptionsObject(popupConfig, place));
@@ -170,10 +181,6 @@ export default class Map extends LightningElement {
 
         if(tooltipConfig) {
             marker.bindTooltip(this.getTooltipContent(tooltipConfig, place), this.getOptionsObject(tooltipConfig, place))
-        }
-
-        if(markerConfig.markerDataFunction) {
-            marker.appData = Function('place', markerConfig.markerDataFunction)(place);
         }
 
         return marker;
@@ -193,12 +200,11 @@ export default class Map extends LightningElement {
                 if(option.value !== undefined) {
                     optionsObj[option.name] = option.value;
                 } else if(option.function !== undefined) {
-                    optionsObj[option.name] = Function('that', 'place', option.function)(this, place);
+                    optionsObj[option.name] = Function('place', 'icons', option.function)(place, this.icons);
                 }
             });
         }
         
-        console.log(optionsObj);
         return optionsObj;
     }
 
@@ -208,7 +214,7 @@ export default class Map extends LightningElement {
         if(popupConfig && popupConfig.content !== undefined) {
             content = popupConfig.content;
         } else if(popupConfig && popupConfig.contentFunction !== undefined) {
-            content = Function('that', 'place', popupConfig.contentFunction)(this, place);
+            content = Function('place', popupConfig.contentFunction)(place);
         }
 
         return content;
@@ -216,5 +222,11 @@ export default class Map extends LightningElement {
 
     getTooltipContent(tooltipContent, place) {
         return this.getPopupContent(tooltipContent, place);
+    }
+
+    @api
+    getHeight() {
+        let container = this.template.querySelector('article');
+        return container ? container.offsetHeight : 0;
     }
 }

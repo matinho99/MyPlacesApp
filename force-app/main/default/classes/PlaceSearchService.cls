@@ -1,15 +1,15 @@
-public with sharing class PlaceSearchController {
+public with sharing class PlaceSearchService {
     private static final String GOOGLE_PLACES_TEXT_SEARCH_ENDPOINT = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
     private static final String GOOGLE_PLACES_DETAILS_ENDPOINT = 'https://maps.googleapis.com/maps/api/place/details/json';
     private static final String GOOGLE_PLACES_PHOTOS_ENDPOINT = 'https://maps.googleapis.com/maps/api/place/photo';
     private static final String GOOGLE_PLACES_API_KEY = MyPlaces_Settings__c.getOrgDefaults().Google_Places_API_Key__c;
 
     @AuraEnabled
-    public static SearchResult searchPlaces(String query) {
+    public static SearchResult searchPlaces(String query, Map<String, Object> userLocation) {
         SearchResult result;
 
         try {
-            result = performSearch(query);
+            result = performSearch(query, userLocation);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
@@ -17,14 +17,14 @@ public with sharing class PlaceSearchController {
         return result;
     }
 
-    private static SearchResult performSearch(String query) {
-        SearchResult result = getTextSearchResult(query);
+    private static SearchResult performSearch(String query, Map<String, Object> userLocation) {
+        SearchResult result = getTextSearchResult(query, userLocation);
 
         if(result != null) {
             for(Place p : result.results) {
                 getMissingPlaceDetails(p);
                 
-                if(!p.photos.isEmpty()) {
+                if(p.photos != null && !p.photos.isEmpty()) {
                     getPlacePhoto(p);
                 }
             }
@@ -34,7 +34,7 @@ public with sharing class PlaceSearchController {
         return result;
     }
 
-    private static SearchResult getTextSearchResult(String query) {
+    private static SearchResult getTextSearchResult(String query, Map<String, Object> userLocation) {
         SearchResult result;
         Http http = new Http();
         HttpRequest req = new HttpRequest();
@@ -43,6 +43,11 @@ public with sharing class PlaceSearchController {
             'language=en',
             'query=' + EncodingUtil.urlEncode(query, 'UTF-8')
         }, '&');
+
+        if(userLocation != null) {
+            args += '&location=' + EncodingUtil.urlEncode(userLocation.get('latitude') + ',' + userLocation.get('longitude'), 'UTF-8');
+        }
+
         req.setEndpoint(GOOGLE_PLACES_TEXT_SEARCH_ENDPOINT + '?' + args);
         req.setMethod('GET');
         HttpResponse res = http.send(req);

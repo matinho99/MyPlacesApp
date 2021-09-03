@@ -1,28 +1,50 @@
 <template>
-    <lightning-layout multiple-rows>
-        <lightning-spinner if:true={isLoading} variant="brand"></lightning-spinner>
-        <lightning-layout-item class="slds-p-bottom_x-small" size="12">
-            <article class="slds-card">
-                <div class="slds-card__body slds-card__body_inner">
-                    <div class="slds-form-element">
-                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
-                            <svg class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default" aria-hidden="true">
-                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#search"></use>
-                            </svg>
-                            <!-- <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default slds-align_absolute-center" size="x-small" icon-name="utility:search"></lightning-icon> -->
-                            <input type="text" id="placeSearchInput" placeholder="Search here" class="slds-input" oninput={handleInputChange} onkeydown={handleEnter}/>
+    <article class="slds-card">
+        <lightning-layout multiple-rows>
+            <lightning-spinner if:true={isLoading} variant="brand"></lightning-spinner>
+            <lightning-layout-item class="slds-border_bottom" size="12" flexibility="no-flex">
+                <article class="slds-card">
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left-right">
+                                <svg class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default" aria-hidden="true">
+                                    <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                </svg>
+                                <form action="" onsubmit={formSubmit}>
+                                    <input type="text" name="search" placeholder="Search here" class="slds-input" oninput={handleInputChange} onkeydown={handleEnter} value={query}/>
+                                </form>
+                                <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" title="Clear" onclick={clearInput}>
+                                    <svg class="slds-button__icon slds-icon-text-light" aria-hidden="true">
+                                        <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#clear"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Clear</span>
+                                </button>
+                            </div>
                         </div>
-                        <!-- <div class="slds-align_absolute-center slds-p-top_small">
-                            <button if:false={inputEmpty} class="slds-button slds-button_brand" onclick={search}>Search</button>
-                            <button if:true={inputEmpty} class="slds-button slds-button_brand" disabled>Search</button>
-                        </div> -->
+                    </div>
+                </article>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" flexibility="no-flex">
+                <div class={placeResultsGridClass}>
+                    <div class={mapGridColClass}>
+                        <c-map feature-name="Place_Search" 
+                               context-name="map" 
+                               places={searchResult.results}
+                               selected-place-idx={selectedPlaceIdx}
+                               onplaceclick={handlePlaceClick}>
+                        </c-map>
+                    </div>
+                    <div class={placesListGridColClass}>
+                        <c-tiles-list feature-name="Place_Search" 
+                                      context-name="placesList" 
+                                      selected-record-idx={selectedPlaceIdx} 
+                                      records={searchResult.results} 
+                                      ontileclick={handleTileClick} 
+                                      ontileaction={handleTileAction}>
+                        </c-tiles-list>
                     </div>
                 </div>
-            </article>
-        </lightning-layout-item>
-        <lightning-layout-item size="12">
-                    <!-- <div class="map slds-map"></div> -->
-                    <c-map feature-name="Place_Search" context-name="map" places={searchResult.results} onplaceclick={handlePlaceClick}></c-map>
-        </lightning-layout-item>
-    </lightning-layout>
+            </lightning-layout-item>
+        </lightning-layout>
+    </article>
 </template>
