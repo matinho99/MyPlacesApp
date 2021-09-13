@@ -192,6 +192,7 @@ export default class PlaceSearch extends NavigationMixin(LightningElement) {
 
     getPlaceFields(place) {
         let fields = {};
+        let streetNumber = this.getAddressComponentValue(place, 'street_number');
         fields[CITY_FIELD.fieldApiName] = this.getAddressComponentValue(place, 'locality');
         fields[COUNTRY_FIELD.fieldApiName] = this.getAddressComponentValue(place, 'country');
         fields[GOOGLE_PLACE_ID_FIELD.fieldApiName] = place.place_id;
@@ -204,14 +205,15 @@ export default class PlaceSearch extends NavigationMixin(LightningElement) {
         fields[PHONE_FIELD.fieldApiName] = place.international_phone_number;
         fields[POSTAL_CODE_FIELD.fieldApiName] = this.getAddressComponentValue(place, 'postal_code');
         fields[STATE_FIELD.fieldApiName] = this.getAddressComponentValue(place, 'administrative_area_level_1');
-        fields[STREET_FIELD.fieldApiName] = this.getAddressComponentValue(place, 'route');
+        fields[STREET_FIELD.fieldApiName] = this.getAddressComponentValue(place, 'route') + (streetNumber !== '' ? ' ' + streetNumber : '');
         fields[WEBSITE_FIELD.fieldApiName] = place.website;
         return fields;
     }
 
     getAddressComponentValue(place, type) {
         let cmp = (place.address_components || []).find(ac => ac.types.includes(type));
-        return cmp.long_name;
+        let result = cmp ? cmp.long_name : '';
+        return result;
     }
 
     getPlaceOpeningHours(place) {
