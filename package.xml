@@ -33,13 +33,21 @@
         <name>CustomObject</name>
     </types>
     <types>
-        <members>Place_Search</members>
+        <members>List_Place_Record_Page</members>
+        <members>List_Record_Page</members>
+        <members>Place_Record_Page</members>
         <name>FlexiPage</name>
     </types>
     <types>
         <members>MyPlaces_Admins</members>
         <members>MyPlaces_Users</members>
         <name>Group</name>
+    </types>
+    <types>
+        <members>List__c-List Layout</members>
+        <members>List_Place__c-List Place Layout</members>
+        <members>Place__c-Place Layout</members>
+        <name>Layout</name>
     </types>
     <types>
         <members>addPlaceToList</members>
