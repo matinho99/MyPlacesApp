@@ -15,7 +15,6 @@ export default class TilesList extends LightningElement {
     isMobile = false;
     isHorizontal = false;
     privateRecords = null;
-    tileActions = [];
     ctrlData = null;
 
     @api
@@ -24,11 +23,11 @@ export default class TilesList extends LightningElement {
     }
 
     set records(value) {
-        this.privateRecords = null;
+        this.prepareData(value);
+    }
 
-        if(value) {
-            this.prepareData(value);
-        }
+    get showData() {
+        return this.privateRecords && this.privateRecords.length;
     }
 
     get gridClass() {
@@ -58,7 +57,6 @@ export default class TilesList extends LightningElement {
         }).then(result => {
             this.ctrlData = result;
             this.isHorizontal = this.ctrlData.config.isHorizontal === true;
-            this.prepareTileActions();
         }).catch(error => {
             this.dispatchEvent(new ShowToastEvent({
                 title: INITIALIZATION_ERROR_TITLE,
@@ -76,38 +74,50 @@ export default class TilesList extends LightningElement {
             rec.idx = r.idx ? r.idx : idx ;
             rec.headerImageUrl = this.ctrlData.config.tileLayout.headerImageUrlFieldName ? r[this.ctrlData.config.tileLayout.headerImageUrlFieldName] : null;
             rec.title = this.ctrlData.config.tileLayout.titleFieldName ? r[this.ctrlData.config.tileLayout.titleFieldName] : null;
-            rec.fields = [];
-
-            (this.ctrlData.config.tileLayout.fields || []).forEach(f => {
-                let field = Object.assign({}, f);
-                field.value = r[f.name];
-                field.iconUrl = f.icon ? SLDS_ICON_URL_TEMPLATE.replace('{iconName}', f.icon) : null;
-
-                field.isAddress = f.type === 'address';
-                field.isEmail = f.type === 'email';
-                field.isNumber = f.type === 'number';
-                field.isPhone = f.type === 'phone';
-                field.isUrl = f.type === 'url';
-                field.isText = !field.isAddress && !field.isEmail && !field.isNumber && !field.isPhone && !field.isUrl;
-
-                field.href = field.isAddress ? GOOGLE_ADDRESS_LINK_TEMPLATE.replace('{query}', field.value) : null;
-                rec.fields.push(field);
-            });
-
+            rec.fields = this.prepareFields(r);
+            rec.actions = this.prepareTileActions(r);
             this.privateRecords.push(rec);
         });
     }
 
-    prepareTileActions() {
-        this.tileActions = [];
+    prepareFields(record) {
+        let fields = [];
+
+        (this.ctrlData.config.tileLayout.fields || []).forEach(f => {
+            let field = Object.assign({}, f);
+            field.value = record[f.name];
+            field.iconUrl = f.icon ? SLDS_ICON_URL_TEMPLATE.replace('{iconName}', f.icon) : null;
+
+            field.isAddress = f.type === 'address';
+            field.isEmail = f.type === 'email';
+            field.isNumber = f.type === 'number';
+            field.isPhone = f.type === 'phone';
+            field.isUrl = f.type === 'url';
+            field.isText = !field.isAddress && !field.isEmail && !field.isNumber && !field.isPhone && !field.isUrl;
+
+            field.href = field.isAddress ? GOOGLE_ADDRESS_LINK_TEMPLATE.replace('{query}', field.value) : null;
+            fields.push(field);
+        });
+
+        return fields;
+    }
+
+    prepareTileActions(record) {
+        let tileActions = [];
 
         (this.ctrlData.config.tileLayout.actions || []).forEach(a => {
             let action = Object.assign({}, a);
             action.iconUrl = a.icon ? SLDS_ICON_URL_TEMPLATE.replace('{iconName}', a.icon) : null;
             action.class = a.buttonClass ? 'slds-button ' + a.buttonClass : 'slds-button';
             action.style = a.buttonStyle;
-            this.tileActions.push(action);
+            let displayAction = a.displayConditionFunction ? Function('record', a.displayConditionFunction)(record) : true;
+
+            if(displayAction) {
+                tileActions.push(action);
+            }
         });
+
+        return tileActions;
     }
 
     tileClicked(event) {

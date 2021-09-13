@@ -35,7 +35,7 @@ export default class Map extends LightningElement {
         this.privatePlaces = value;
         
         if(this.isRendered) {
-            this.preparePlaces(this.privatePlaces); 
+            this.prepareMarkers(); 
         }
     }
 
@@ -140,7 +140,7 @@ export default class Map extends LightningElement {
         });
     }
 
-    preparePlaces(places) {
+    prepareMarkers() {
         this.clearMarkers();
         this.mapMarkers = [];
         let placesConfig = (this.ctrlData.config.features || []).find(feature => feature.name === 'places');
@@ -150,14 +150,16 @@ export default class Map extends LightningElement {
             let popupConfig = (this.ctrlData.config.popupConfigs || []).find(pc => pc.name === markerConfig.popupConfig);
             let tooltipConfig = (this.ctrlData.config.tooltipConfigs || []).find(tc => tc.name === markerConfig.tooltipConfig);
 
-            (places || []).forEach(place => {
+            (this.privatePlaces || []).forEach(place => {
                 let location = this.getPlaceLocation(markerConfig, place);
                 let marker = this.addMarker(location, markerConfig, popupConfig, tooltipConfig, place);
                 marker.on('click', (event) => this.dispatchEvent(new CustomEvent('placeclick', { detail: event.target.appData })) );
                 this.mapMarkers.push(marker);
             });
 
-            this.map.fitBounds((this.mapMarkers).map(marker => marker._latlng));
+            if(this.mapMarkers.length) {
+                this.map.fitBounds(this.mapMarkers.map(marker => marker._latlng));
+            }
         }
     }
 

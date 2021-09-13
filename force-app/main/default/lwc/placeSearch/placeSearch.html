@@ -29,7 +29,7 @@
                     <div class={mapGridColClass}>
                         <c-map feature-name="Place_Search" 
                                context-name="map" 
-                               places={searchResult.results}
+                               places={places}
                                selected-place-idx={selectedPlaceIdx}
                                onplaceclick={handlePlaceClick}>
                         </c-map>
@@ -38,7 +38,7 @@
                         <c-tiles-list feature-name="Place_Search" 
                                       context-name="placesList" 
                                       selected-record-idx={selectedPlaceIdx} 
-                                      records={searchResult.results} 
+                                      records={places} 
                                       ontileclick={handleTileClick} 
                                       ontileaction={handleTileAction}>
                         </c-tiles-list>
@@ -46,5 +46,8 @@
                 </div>
             </lightning-layout-item>
         </lightning-layout>
+        <template if:true={showAddToList}>
+            <c-add-place-to-list place={placeToAddToList} ondone={handleAddPlaceToListDone}></c-add-place-to-list>
+        </template>
     </article>
 </template>

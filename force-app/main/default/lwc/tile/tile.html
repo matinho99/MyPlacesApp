@@ -25,8 +25,8 @@
                     </div>
                 </div>
             </template>
-            <div if:true={actions} class="slds-grid slds-gutters_xx-small slds-grid_align-center slds-wrap slds-p-top_x-small">
-                <template for:each={actions} for:item="action">
+            <div if:true={privateRecord.actions} class="slds-grid slds-gutters_xx-small slds-grid_align-center slds-wrap slds-p-top_x-small">
+                <template for:each={privateRecord.actions} for:item="action">
                     <div key={action.name} class="slds-col regularText">
                         <button if:true={action.hasIconTop} class={action.class} style={action.style} data-action-name={action.name} onclick={actionClicked}>
                             <div class="slds-grid slds-grid_vertical">
