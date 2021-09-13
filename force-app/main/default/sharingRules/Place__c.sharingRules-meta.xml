@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingOwnerRules>
+        <fullName>Imported_Places</fullName>
+        <accessLevel>Read</accessLevel>
+        <label>Imported Places</label>
+        <sharedTo>
+            <group>MyPlaces_Users</group>
+        </sharedTo>
+        <sharedFrom>
+            <group>MyPlaces_Admins</group>
+        </sharedFrom>
+    </sharingOwnerRules>
+</SharingRules>

@@ -135,6 +135,15 @@
       ],
       &quot;actions&quot;: [
         {
+          &quot;name&quot;: &quot;open&quot;,
+          &quot;label&quot;: &quot;Open&quot;,
+          &quot;icon&quot;: &quot;new_window&quot;,
+          &quot;hasIconTop&quot;: true,
+          &quot;buttonClass&quot;: &quot;&quot;,
+          &quot;buttonStyle&quot;: &quot;line-height: normal;&quot;,
+          &quot;displayConditionFunction&quot;: &quot;return record.recordId;&quot;
+        },
+        {
           &quot;name&quot;: &quot;import&quot;,
           &quot;label&quot;: &quot;Import&quot;,
           &quot;icon&quot;: &quot;bookmark&quot;,
@@ -149,7 +158,8 @@
           &quot;icon&quot;: &quot;add&quot;,
           &quot;hasIconTop&quot;: true,
           &quot;buttonClass&quot;: &quot;&quot;,
-          &quot;buttonStyle&quot;: &quot;line-height: normal;&quot;
+          &quot;buttonStyle&quot;: &quot;line-height: normal;&quot;,
+          &quot;displayConditionFunction&quot;: &quot;return record.recordId;&quot;
         }
       ]
     }
