@@ -3,13 +3,14 @@ public with sharing class PlaceSearchService {
     private static final String GOOGLE_PLACES_DETAILS_ENDPOINT = 'https://maps.googleapis.com/maps/api/place/details/json';
     private static final String GOOGLE_PLACES_PHOTOS_ENDPOINT = 'https://maps.googleapis.com/maps/api/place/photo';
     private static final String GOOGLE_PLACES_API_KEY = MyPlaces_Settings__c.getOrgDefaults().Google_Places_API_Key__c;
+    private static final List<User> ADMIN_USERS = [SELECT Id FROM User WHERE Id IN (SELECT UserOrGroupId FROM GroupMember WHERE Group.DeveloperName = 'MyPlaces_Admins') AND IsActive = true];
 
     @AuraEnabled
-    public static SearchResult searchPlaces(String query, Map<String, Object> userLocation) {
-        SearchResult result;
+    public static PlaceSearchData searchPlaces(String query, Map<String, Object> userLocation) {
+        PlaceSearchData result;
 
         try {
-            result = performSearch(query, userLocation);
+            result = new PlaceSearchData(query, userLocation);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
@@ -21,7 +22,13 @@ public with sharing class PlaceSearchService {
         SearchResult result = getTextSearchResult(query, userLocation);
 
         if(result != null) {
+            Map<String, Place__c> existingPlaces = getExistingPlaces(result.results);
+
             for(Place p : result.results) {
+                if(existingPlaces.containsKey(p.place_id)) {
+                    p.recordId = existingPlaces.get(p.place_id).Id;
+                }
+
                 getMissingPlaceDetails(p);
                 
                 if(p.photos != null && !p.photos.isEmpty()) {
@@ -57,6 +64,24 @@ public with sharing class PlaceSearchService {
         }
 
         return result;
+    }
+
+    private static Map<String, Place__c> getExistingPlaces(List<Place> places) {
+        Map<String, Place__c> existingPlaces = new Map<String, Place__c>();
+
+        if(places != null && !places.isEmpty()) {
+            Set<String> googlePlaceIds = new Set<String>();
+
+            for(Place p : places) {
+                googlePlaceIds.add(p.place_id);
+            }
+
+            for(Place__c p : [SELECT Id, Google_Place_Id__c FROM Place__c WHERE Google_Place_Id__c IN :googlePlaceIds]) {
+                existingPlaces.put(p.Google_Place_Id__c, p);
+            }
+        }
+
+        return existingPlaces;
     }
 
     private static void getMissingPlaceDetails(Place place) {
@@ -96,7 +121,20 @@ public with sharing class PlaceSearchService {
         if(res.getStatusCode() == 302) {
             place.photo_url = res.getBody().substring(res.getBody().indexOf('<A HREF="') + '<A HREF="'.length(), res.getBody().indexOf('">here</A>'));
         }
-	} 
+	}
+
+    public class PlaceSearchData {
+        @AuraEnabled
+        public SearchResult searchResult;
+
+        @AuraEnabled
+        public Id dataOwnerId;
+
+        public PlaceSearchData(String query, Map<String, Object> userLocation) {
+            this.searchResult = performSearch(query, userLocation);
+            this.dataOwnerId = !ADMIN_USERS.isEmpty() ? ADMIN_USERS[0].Id : UserInfo.getUserId();
+        }
+    }
 
     public class SearchResult {
         @AuraEnabled
@@ -108,6 +146,9 @@ public with sharing class PlaceSearchService {
     }
 
     private class Place {
+        @AuraEnabled
+        public String recordId;
+
         @AuraEnabled
         public String place_id;
 
