@@ -1,0 +1,20 @@
+<template>
+    <div class={primaryContainerClass}>
+        <div class={secondaryContainerClass}>
+            <div class={headerClass}>
+                <h2 class="title slds-text-heading_small slds-truncate slds-text-align_left slds-align-middle">Add to list</h2>
+                <button if:false={showRecordForm} class="slds-button slds-button_brand" onclick={handleDone}>Done</button>
+            </div>
+            <div class={bodyClass}>
+                <div if:false={showRecordForm} class="slds-align_absolute-center slds-p-bottom_xx-small">
+                    <button class="slds-button slds-button_neutral" onclick={handleCreateList}>Create list</button>
+                </div>
+                <div>
+                    <lightning-datatable if:false={showRecordForm} columns={columns} data={data} key-field="Id" selected-rows={selectedListIds}></lightning-datatable>
+                    <lightning-record-form if:true={showRecordForm} object-api-name={objectApiName} layout-type="Full" onsuccess={handleRecordCreateSuccess} oncancel={handleFormCancel}></lightning-record-form>
+                </div>
+            </div>
+        </div>
+        <lightning-spinner if:true={isLoading}></lightning-spinner>
+    </div>
+</template>

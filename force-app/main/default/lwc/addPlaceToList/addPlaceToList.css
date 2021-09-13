@@ -1,0 +1,18 @@
+.panel {
+    position: absolute;
+    top: 0;
+    z-index: 10;
+    border-radius: inherit;
+}
+
+.modal {
+    background-color: rgba(8, 7, 7, 0.6);
+}
+
+.modalHeader {
+    display: flex;
+}
+
+.title {
+    flex: 1;
+}
