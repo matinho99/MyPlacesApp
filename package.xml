@@ -13,7 +13,7 @@
         <name>ApexTrigger</name>
     </types>
     <types>
-        <members>My_Places</members>
+        <members>MyPlaces</members>
         <name>CustomApplication</name>
     </types>
     <types>
@@ -35,6 +35,7 @@
     <types>
         <members>List_Place_Record_Page</members>
         <members>List_Record_Page</members>
+        <members>MyPlaces_Home</members>
         <members>Place_Record_Page</members>
         <name>FlexiPage</name>
     </types>
