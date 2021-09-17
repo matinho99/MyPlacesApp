@@ -132,6 +132,7 @@ export default class AddPlaceToList extends LightningElement {
 
     handleDone() {
         this.isLoading = true;
+        let somethingChanged = false;
         let selectedRows = this.template.querySelector('lightning-datatable').getSelectedRows();
         let listPlacesToDelete = this.listPlaces ? this.listPlaces.slice(0) : [];
         
@@ -143,6 +144,7 @@ export default class AddPlaceToList extends LightningElement {
                 promise = Promise.resolve();
                 listPlacesToDelete = listPlacesToDelete.filter(lp => lp.Id !== listPlace.Id);
             } else {
+                somethingChanged = true;
                 let fields = {};
                 fields[PLACE_FIELD.fieldApiName] = this.privatePlace.recordId;
                 fields[LIST_FIELD.fieldApiName] = r.Id;
@@ -157,14 +159,17 @@ export default class AddPlaceToList extends LightningElement {
         });
 
         listPlacesToDelete.forEach(lp => {
+            somethingChanged = true;
             promises.push(deleteRecord(lp.Id));
         });
 
         Promise.all(promises).then(() => {
-            this.dispatchEvent(new ShowToastEvent({
-                title: TOAST_SUCCESS_TITLE,
-                variant: TOAST_SUCCESS_VARIANT
-            }));
+            if(somethingChanged) {
+                this.dispatchEvent(new ShowToastEvent({
+                    title: TOAST_SUCCESS_TITLE,
+                    variant: TOAST_SUCCESS_VARIANT
+                }));
+            }
         }).catch(error => {
             console.error(error);
         }).finally(() => {

@@ -147,10 +147,16 @@ export default class PlaceSearch extends NavigationMixin(LightningElement) {
         let actionName = event.detail.action;
         let place = event.detail.record;
 
+        if(!place.recordId) {
+            this.importPlace(place).then(result => this.executeTileAction(result, actionName));
+        } else {
+            this.executeTileAction(place, actionName);
+        }
+    }
+
+    executeTileAction(place, actionName) {
         if(actionName === 'open') {
             this.navigateToPlaceViewPage(place.recordId);
-        } else if(actionName === 'import') {
-            this.importPlace(place);
         } else if(actionName === 'addToList') {
             this.placeToAddToList = place;
             this.showAddToList = true;
@@ -162,22 +168,17 @@ export default class PlaceSearch extends NavigationMixin(LightningElement) {
         this.showAddToList = false;
     }
 
-    importPlace(place) {
+    async importPlace(place) {
         this.isLoading = true;
+        let importedPlace = null;
 
-        createRecord({
+        await createRecord({
             apiName: PLACE_OBJECT.objectApiName,
             fields: this.getPlaceFields(place)
         }).then(result => {
-            let importedPlace = this.places.find(r => r.place_id === place.place_id);
             this.places = this.places.slice(0);
+            importedPlace = this.places.find(r => r.place_id === place.place_id);
             importedPlace.recordId = result.id;
-
-            this.dispatchEvent(new ShowToastEvent({
-                title: 'Success',
-                message: 'Successfully imported place: ' + place.name,
-                variant: TOAST_SUCCESS_VARIANT
-            }));
         }).catch(error => {
             console.error(error);
             this.dispatchEvent(new ShowToastEvent({
@@ -188,6 +189,8 @@ export default class PlaceSearch extends NavigationMixin(LightningElement) {
         }).finally(() => {
             this.isLoading = false;
         });
+
+        return importedPlace;
     }
 
     getPlaceFields(place) {
