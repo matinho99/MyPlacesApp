@@ -11,6 +11,7 @@ public with sharing class MapService {
         new StandardIcon('standardViolet', '/images/marker-icon-violet.png', '/images/marker-icon-2x-violet.png'),
         new StandardIcon('standardYellow', '/images/marker-icon-yellow.png', '/images/marker-icon-2x-yellow.png')
     };
+    private static Map<String, Feature_Setting__mdt> mockConfigs = new Map<String, Feature_Setting__mdt>();
 
     @AuraEnabled(cacheable = true)
     public static MapConfig getMapConfig(String contextName, String featureName) {
@@ -27,15 +28,30 @@ public with sharing class MapService {
 
     private static Map<String, Object> getConfig(String contextName, String featureName) {
         Map<String, Object> config;
-        List<Feature_Setting__mdt> settings = [SELECT Properties_JSON__c FROM Feature_Setting__mdt WHERE DeveloperName = :featureName];
+        List<Feature_Setting__mdt> settings;
 
-        if(!settings.isEmpty()) {
+        if(!Test.isRunningTest()){
+            settings = [SELECT Properties_JSON__c FROM Feature_Setting__mdt WHERE DeveloperName = :featureName];
+        } else {
+            settings = new List<Feature_Setting__mdt>();
+
+            if(mockConfigs.containsKey(featureName)) {
+                settings.add(mockConfigs.get(featureName));
+            }
+        }
+
+        if(settings != null && !settings.isEmpty()) {
             Map<String, Object> setting = (Map<String, Object>)JSON.deserializeUntyped(settings[0].Properties_JSON__c);
             config = setting.containsKey(contextName) ? (Map<String, Object>)setting.get(contextName) : null;
         }
 
         return config;
     }
+
+    @TestVisible
+    private static void setMockConfig(String name, String config) {
+        mockConfigs.put(name, new Feature_Setting__mdt( DeveloperName = name, Properties_JSON__c = config ));
+    } 
 
     public class MapConfig {
         @AuraEnabled

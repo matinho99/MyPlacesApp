@@ -1,8 +1,10 @@
 public with sharing class PlaceSearchService {
-    private static final String GOOGLE_PLACES_TEXT_SEARCH_ENDPOINT = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
-    private static final String GOOGLE_PLACES_DETAILS_ENDPOINT = 'https://maps.googleapis.com/maps/api/place/details/json';
-    private static final String GOOGLE_PLACES_PHOTOS_ENDPOINT = 'https://maps.googleapis.com/maps/api/place/photo';
-    private static final String GOOGLE_PLACES_API_KEY = MyPlaces_Settings__c.getOrgDefaults().Google_Places_API_Key__c;
+    @TestVisible
+    private static final String GOOGLE_PLACES_API_KEY = MyPlaces_Settings__c.getOrgDefaults().Google_Places_API_Key__c != null ? MyPlaces_Settings__c.getOrgDefaults().Google_Places_API_Key__c : MyPlaces_Settings__c.getInstance().Google_Places_API_Key__c;
+
+    public static final String GOOGLE_PLACES_TEXT_SEARCH_ENDPOINT = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
+    public static final String GOOGLE_PLACES_DETAILS_ENDPOINT = 'https://maps.googleapis.com/maps/api/place/details/json';
+    public static final String GOOGLE_PLACES_PHOTOS_ENDPOINT = 'https://maps.googleapis.com/maps/api/place/photo';
     private static final List<User> ADMIN_USERS = [SELECT Id FROM User WHERE Id IN (SELECT UserOrGroupId FROM GroupMember WHERE Group.DeveloperName = 'MyPlaces_Admins') AND IsActive = true];
 
     @AuraEnabled
@@ -37,7 +39,6 @@ public with sharing class PlaceSearchService {
             }
         }
         
-        System.debug(JSON.serializePretty(result));
         return result;
     }
 

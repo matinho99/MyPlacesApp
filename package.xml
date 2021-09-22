@@ -2,10 +2,17 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>AddPlaceToListService</members>
+        <members>AddPlaceToListServiceTest</members>
+        <members>AppConstants</members>
         <members>MapService</members>
+        <members>MapServiceTest</members>
         <members>PlaceSearchService</members>
+        <members>PlaceSearchServiceMock</members>
+        <members>PlaceSearchServiceTest</members>
         <members>TilesListService</members>
+        <members>TilesListServiceTest</members>
         <members>UserTriggerHandler</members>
+        <members>UserTriggerTest</members>
         <name>ApexClass</name>
     </types>
     <types>
