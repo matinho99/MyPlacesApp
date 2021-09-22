@@ -1,11 +1,4 @@
 public with sharing class UserTriggerHandler {
-    private static final Profile appAdminProfile = [SELECT Id FROM Profile WHERE Name = 'MyPlaces Admin'];
-    private static final Profile appUserProfile = [SELECT Id FROM Profile WHERE Name = 'MyPlaces User'];
-    private static final PermissionSet appAdminPermissionSet = [SELECT Id FROM PermissionSet WHERE Name = 'MyPlaces_Admin'];
-    private static final PermissionSet appUserPermissionSet = [SELECT Id FROM PermissionSet WHERE Name = 'MyPlaces_User'];
-    private static final Group appAdminGroup = [SELECT Id FROM Group WHERE DeveloperName = 'MyPlaces_Admins'];
-    private static final Group appUserGroup = [SELECT Id FROM Group WHERE DeveloperName = 'MyPlaces_Users'];
-
     public static void afterInsert(Map<Id, User> newMap) {
         assignUsersToPermissionSets(newMap);
         assignUsersToGroups(newMap);
@@ -21,25 +14,28 @@ public with sharing class UserTriggerHandler {
         Set<Id> adminPermissionSetAssigneeIds = new Set<Id>();
         Set<Id> userPermissionSetAssigneeIds = new Set<Id>();
 
-        for(PermissionSetAssignment psa : [SELECT AssigneeId, Assignee.ProfileId, PermissionSetId FROM PermissionSetAssignment WHERE AssigneeId IN :userMap.keySet() AND (PermissionSetId = :appAdminPermissionSet.Id OR PermissionSetId = :appUserPermissionSet.Id) AND IsActive = true]) {
-            if(psa.Assignee.ProfileId == appAdminProfile.Id && psa.PermissionSetId == appAdminPermissionSet.Id) {
+        for(PermissionSetAssignment psa : [SELECT AssigneeId, Assignee.ProfileId, PermissionSetId 
+                                           FROM PermissionSetAssignment 
+                                           WHERE AssigneeId IN :userMap.keySet() AND (PermissionSetId = :AppConstants.APP_ADMIN_PERMISSION_SET.Id 
+                                                                                   OR PermissionSetId = :AppConstants.APP_USER_PERMISSION_SET.Id) AND IsActive = true]) {
+            if(psa.Assignee.ProfileId == AppConstants.APP_ADMIN_PROFILE.Id && psa.PermissionSetId == AppConstants.APP_ADMIN_PERMISSION_SET.Id) {
                 adminPermissionSetAssigneeIds.add(psa.AssigneeId);
-            } else if(psa.Assignee.ProfileId == appUserProfile.Id && psa.PermissionSetId == appUserPermissionSet.Id) {
+            } else if(psa.Assignee.ProfileId == AppConstants.APP_USER_PROFILE.Id && psa.PermissionSetId == AppConstants.APP_USER_PERMISSION_SET.Id) {
                 userPermissionSetAssigneeIds.add(psa.AssigneeId);
             }
         }
 
         for(User u : userMap.values()) {
             if(u.IsActive) {
-                if(u.ProfileId == appAdminProfile.Id && !adminPermissionSetAssigneeIds.contains(u.Id)) {
+                if(u.ProfileId == AppConstants.APP_ADMIN_PROFILE.Id && !adminPermissionSetAssigneeIds.contains(u.Id)) {
                     toInsert.add(new PermissionSetAssignment(
                         AssigneeId = u.Id,
-                        PermissionSetId = appAdminPermissionSet.Id
+                        PermissionSetId = AppConstants.APP_ADMIN_PERMISSION_SET.Id
                     ));
-                } else if(u.ProfileId == appUserProfile.Id && !userPermissionSetAssigneeIds.contains(u.Id)) {
+                } else if(u.ProfileId == AppConstants.APP_USER_PROFILE.Id && !userPermissionSetAssigneeIds.contains(u.Id)) {
                     toInsert.add(new PermissionSetAssignment(
                         AssigneeId = u.Id,
-                        PermissionSetId = appUserPermissionSet.Id
+                        PermissionSetId = AppConstants.APP_USER_PERMISSION_SET.Id
                     ));
                 }
             }
@@ -55,24 +51,24 @@ public with sharing class UserTriggerHandler {
         Set<Id> adminGroupMemberIds = new Set<Id>();
         Set<Id> userGroupMemberIds = new Set<Id>();
 
-        for(GroupMember gm : [SELECT UserOrGroupId, GroupId FROM GroupMember WHERE UserOrGroupId IN :userMap.keySet() AND (GroupId = :appAdminGroup.Id OR GroupId = :appUserGroup.Id)]) {
-            if(userMap.get(gm.UserOrGroupId).ProfileId == appAdminProfile.Id && gm.GroupId == appAdminGroup.Id) {
+        for(GroupMember gm : [SELECT UserOrGroupId, GroupId FROM GroupMember WHERE UserOrGroupId IN :userMap.keySet() AND (GroupId = :AppConstants.APP_ADMIN_GROUP.Id OR GroupId = :AppConstants.APP_USER_GROUP.Id)]) {
+            if(userMap.get(gm.UserOrGroupId).ProfileId == AppConstants.APP_ADMIN_PROFILE.Id && gm.GroupId == AppConstants.APP_ADMIN_GROUP.Id) {
                 adminGroupMemberIds.add(gm.UserOrGroupId);
-            } else if(userMap.get(gm.UserOrGroupId).ProfileId == appUserProfile.Id && gm.GroupId == appUserGroup.Id) {
+            } else if(userMap.get(gm.UserOrGroupId).ProfileId == AppConstants.APP_USER_PROFILE.Id && gm.GroupId == AppConstants.APP_USER_GROUP.Id) {
                 userGroupMemberIds.add(gm.UserOrGroupId);
             }
         }
 
         for(User u : userMap.values()) {
             if(u.IsActive) {
-                if(u.ProfileId == appAdminProfile.Id && !adminGroupMemberIds.contains(u.Id)) {
+                if(u.ProfileId == AppConstants.APP_ADMIN_PROFILE.Id && !adminGroupMemberIds.contains(u.Id)) {
                     toInsert.add(new GroupMember(
-                        GroupId = appAdminGroup.Id,
+                        GroupId = AppConstants.APP_ADMIN_GROUP.Id,
                         UserOrGroupId = u.Id
                     ));
-                } else if(u.ProfileId == appUserProfile.Id && !userGroupMemberIds.contains(u.Id)) {
+                } else if(u.ProfileId == AppConstants.APP_USER_PROFILE.Id && !userGroupMemberIds.contains(u.Id)) {
                     toInsert.add(new GroupMember(
-                        GroupId = appUserGroup.Id,
+                        GroupId = AppConstants.APP_USER_GROUP.Id,
                         UserOrGroupId = u.Id
                     ));
                 }
