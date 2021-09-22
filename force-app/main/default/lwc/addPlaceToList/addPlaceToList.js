@@ -18,9 +18,11 @@ const DEFAULT_TITLE = 'Add to List';
 const RECORD_FORM_TITLE = 'New List';
 
 const TOAST_SUCCESS_TITLE = 'Success';
+const TOAST_ERROR_TITLE = 'Error';
 const TOAST_SUCCESS_VARIANT = 'success';
 const TOAST_ERROR_VARIANT = 'error';
 const TOAST_RECORD_CREATE_MESSAGE = 'List was successfully created';
+const TOAST_LIST_PLACES_MODIFIED_MESSAGE = 'Your List Places were successfully edited';
 
 export default class AddPlaceToList extends LightningElement {
     
@@ -126,6 +128,14 @@ export default class AddPlaceToList extends LightningElement {
         this.init();
     }
 
+    handleRecordCreateError(event) {
+        this.dispatchEvent(new ShowToastEvent({
+            title: TOAST_ERROR_TITLE,
+            message: event.detail.message,
+            variant: TOAST_ERROR_VARIANT
+        }));
+    }
+
     handleFormCancel() {
         this.showRecordForm = false;
     }
@@ -167,11 +177,17 @@ export default class AddPlaceToList extends LightningElement {
             if(somethingChanged) {
                 this.dispatchEvent(new ShowToastEvent({
                     title: TOAST_SUCCESS_TITLE,
+                    message: TOAST_LIST_PLACES_MODIFIED_MESSAGE,
                     variant: TOAST_SUCCESS_VARIANT
                 }));
             }
         }).catch(error => {
             console.error(error);
+            this.dispatchEvent(new ShowToastEvent({
+                title: TOAST_ERROR_TITLE,
+                message: error.body.message,
+                variant: TOAST_ERROR_VARIANT
+            }));
         }).finally(() => {
             this.isLoading = false;
             this.dispatchEvent(new CustomEvent('done'));

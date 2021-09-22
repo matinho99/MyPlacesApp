@@ -9,9 +9,10 @@ const DEFAULT_TILE_LAYER_OPTIONS = {
     attribution: '&copy; Authors: <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     maxZoom: 18
 };
-const TOAST_SUCCESS_VARIANT = 'success';
+
+const TOAST_ERROR_TITLE = 'Error';
 const TOAST_ERROR_VARIANT = 'error';
-const INITIALIZATION_ERROR_TITLE = "Map initialization failed";
+const TOAST_INITIALIZATION_ERROR_DEFAULT_MESSAGE = "Map initialization failed";
 
 export default class Map extends LightningElement {
     @api contextName;
@@ -69,8 +70,8 @@ export default class Map extends LightningElement {
         }).catch(error => {
             console.error(error);
             this.dispatchEvent(new ShowToastEvent({
-                title: INITIALIZATION_ERROR_TITLE,
-                message: error,
+                title: TOAST_ERROR_TITLE,
+                message: error.message ? error.message : ( error.body && error.body.message ? error.body.message : TOAST_INITIALIZATION_ERROR_DEFAULT_MESSAGE ),
                 variant: TOAST_ERROR_VARIANT
             }));
         }).finally(() => {

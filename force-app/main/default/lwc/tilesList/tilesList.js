@@ -2,8 +2,8 @@ import { api, LightningElement } from 'lwc';
 import getTilesListConfig from '@salesforce/apex/TilesListService.getTilesListConfig';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
+const TOAST_ERROR_TITLE = 'Error';
 const TOAST_ERROR_VARIANT = 'error';
-const INITIALIZATION_ERROR_TITLE = 'List initialization failed';
 const GOOGLE_ADDRESS_LINK_TEMPLATE = 'https://www.google.com/maps/?q={query}';
 const SLDS_ICON_URL_TEMPLATE = '/_slds/icons/utility-sprite/svg/symbols.svg#{iconName}';
 
@@ -12,7 +12,7 @@ export default class TilesList extends LightningElement {
     @api featureName;
     @api selectedRecordIdx;
 
-    isMobile = false;
+    isMobile = true;
     isHorizontal = false;
     privateRecords = null;
     ctrlData = null;
@@ -59,8 +59,8 @@ export default class TilesList extends LightningElement {
             this.isHorizontal = this.ctrlData.config.isHorizontal === true;
         }).catch(error => {
             this.dispatchEvent(new ShowToastEvent({
-                title: INITIALIZATION_ERROR_TITLE,
-                message: error,
+                title: TOAST_ERROR_TITLE,
+                message: error.body.message,
                 variant: TOAST_ERROR_VARIANT
             }));
         });

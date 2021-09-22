@@ -28,10 +28,9 @@ const LONGITUDE_FIELD = { fieldApiName: 'Location__Longitude__s', objectApiName:
 export default class PlaceSearch extends NavigationMixin(LightningElement) {
     isLoading = false;
     isRendered = false;
-    isMobile = false;
+    isMobile = true;
     userLocation = null;
     query = '';
-    desktopTilesListHeight = null;
     selectedPlaceIdx = null;
     ctrlData = null;
     showAddToList = false;
@@ -78,7 +77,10 @@ export default class PlaceSearch extends NavigationMixin(LightningElement) {
             return;
         }
 
-        this.setTilesListHeight();
+        if(!this.isMobile) {
+            this.setTilesListHeight();
+        }
+        
         this.isRendered = true;
     }
 
@@ -126,7 +128,7 @@ export default class PlaceSearch extends NavigationMixin(LightningElement) {
             console.error(error);
             this.dispatchEvent(new ShowToastEvent({
                 title: SEARCH_ERROR_TITLE,
-                message: error,
+                message: error.body.message,
                 variant: TOAST_ERROR_VARIANT
             }));
         }).finally(() => {
