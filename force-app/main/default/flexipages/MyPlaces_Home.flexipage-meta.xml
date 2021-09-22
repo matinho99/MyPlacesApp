@@ -59,24 +59,24 @@
                 <componentName>flexipage:filterListCard</componentName>
             </componentInstance>
         </itemInstances>
-        <name>top</name>
+        <name>region1</name>
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <name>left</name>
+        <name>region2</name>
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <name>middle</name>
+        <name>region3</name>
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <name>right</name>
+        <name>region4</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>MyPlaces Home</masterLabel>
+    <masterLabel>Home</masterLabel>
     <template>
-        <name>home:desktopTemplateHeaderThreeColumns</name>
+        <name>flexipage:appHomeTemplateHeaderThreeColumns</name>
     </template>
-    <type>HomePage</type>
+    <type>AppPage</type>
 </FlexiPage>

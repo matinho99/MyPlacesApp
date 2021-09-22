@@ -64,23 +64,7 @@
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
     <label>MyPlaces</label>
     <navType>Standard</navType>
-    <profileActionOverrides>
-        <actionName>Tab</actionName>
-        <content>MyPlaces_Home</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>standard-home</pageOrSobjectType>
-        <type>Flexipage</type>
-        <profile>MyPlaces User</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>Tab</actionName>
-        <content>MyPlaces_Home</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>standard-home</pageOrSobjectType>
-        <type>Flexipage</type>
-        <profile>MyPlaces Admin</profile>
-    </profileActionOverrides>
-    <tabs>standard-home</tabs>
+    <tabs>Home</tabs>
     <tabs>Place_Search</tabs>
     <tabs>Place__c</tabs>
     <tabs>List__c</tabs>

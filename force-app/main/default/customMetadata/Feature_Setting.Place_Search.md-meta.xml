@@ -49,7 +49,7 @@
     &quot;markerConfigs&quot;: [
       {
         &quot;name&quot;: &quot;user&quot;,
-        &quot;popupConfig&quot;: &quot;user&quot;,
+        &quot;tooltipConfig&quot;: &quot;user&quot;,
         &quot;options&quot;: [
           {
             &quot;name&quot;: &quot;title&quot;,
@@ -79,16 +79,6 @@
     ],
     &quot;popupConfigs&quot;: [
       {
-        &quot;name&quot;: &quot;user&quot;,
-        &quot;content&quot;: &quot;You are here&quot;,
-        &quot;options&quot;: [
-          {
-            &quot;name&quot;: &quot;closeButton&quot;,
-            &quot;value&quot;: false
-          }
-        ]
-      },
-      {
         &quot;name&quot;: &quot;place&quot;,
         &quot;contentFunction&quot;: &quot;return \&quot;&lt;b&gt;\&quot; + place.name + \&quot;&lt;/b&gt;&lt;br&gt;\&quot; + place.formatted_address&quot;,
         &quot;options&quot;: [
@@ -99,7 +89,13 @@
         ]
       }
     ],
-    &quot;tooltipConfigs&quot;: [],
+    &quot;tooltipConfigs&quot;: [
+      {
+        &quot;name&quot;: &quot;user&quot;,
+        &quot;content&quot;: &quot;You are here&quot;,
+        &quot;options&quot;: []
+      }
+    ],
     &quot;customIcons&quot;: [
       {
         &quot;name&quot;: &quot;&quot;,
