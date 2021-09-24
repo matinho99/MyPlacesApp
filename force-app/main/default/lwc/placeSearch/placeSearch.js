@@ -28,7 +28,7 @@ const LONGITUDE_FIELD = { fieldApiName: 'Location__Longitude__s', objectApiName:
 export default class PlaceSearch extends NavigationMixin(LightningElement) {
     isLoading = false;
     isRendered = false;
-    isMobile = true;
+    isMobile = false;
     userLocation = null;
     query = '';
     selectedPlaceIdx = null;
