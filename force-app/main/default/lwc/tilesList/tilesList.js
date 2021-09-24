@@ -12,7 +12,7 @@ export default class TilesList extends LightningElement {
     @api featureName;
     @api selectedRecordIdx;
 
-    isMobile = true;
+    isMobile = false;
     isHorizontal = false;
     privateRecords = null;
     ctrlData = null;

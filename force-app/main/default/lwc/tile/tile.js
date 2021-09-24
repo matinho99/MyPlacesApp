@@ -1,8 +1,7 @@
 import { api, LightningElement } from 'lwc';
 
 export default class Tile extends LightningElement {
-    @api selectedRecordIdx;
-
+    privateSelectedRecordIdx;
     privateRecord = {};
     headerStyle = null;
 
@@ -16,8 +15,21 @@ export default class Tile extends LightningElement {
         this.setHeaderStyle();
     }
 
+    @api
+    get selectedRecordIdx() {
+        return this.privateSelectedRecordIdx;
+    }
+
+    set selectedRecordIdx(value) {
+        this.privateSelectedRecordIdx = value;
+
+        if(this.record.idx === this.privateSelectedRecordIdx) {
+            this.template.querySelector('div').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
+
     get tileClass() {
-        return this.privateRecord.idx === this.selectedRecordIdx ? 'selectedTile slds-card slds-m-horizontal_xx-small' : 'tile slds-card slds-m-horizontal_xx-small';
+        return this.privateRecord.idx === this.privateSelectedRecordIdx ? 'selectedTile slds-card slds-m-horizontal_xx-small' : 'tile slds-card slds-m-horizontal_xx-small';
     }
 
     setHeaderStyle() {
