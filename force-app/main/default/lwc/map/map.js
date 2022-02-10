@@ -118,6 +118,7 @@ export default class Map extends LightningElement {
     initMap() {
         let container = this.template.querySelector('div.map.slds-map');
         this.map = L.map(container, this.getOptionsObject(this.ctrlData.config));
+        this.map.setView([0, 0], 1);
         this.setupTileLayer();
         this.setupGeolocation();
     }

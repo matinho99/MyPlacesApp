@@ -77,7 +77,7 @@ public with sharing class PlaceSearchService {
                 googlePlaceIds.add(p.place_id);
             }
 
-            for(Place__c p : [SELECT Id, Google_Place_Id__c FROM Place__c WHERE Google_Place_Id__c IN :googlePlaceIds]) {
+            for(Place__c p : [SELECT Id, Google_Place_Id__c FROM Place__c WHERE Google_Place_Id__c IN :googlePlaceIds AND OwnerId = :UserInfo.getUserId()]) {
                 existingPlaces.put(p.Google_Place_Id__c, p);
             }
         }

@@ -206,7 +206,6 @@ export default class PlaceSearch extends NavigationMixin(LightningElement) {
         fields[LONGITUDE_FIELD.fieldApiName] = place.geometry.location.lng;
         fields[NAME_FIELD.fieldApiName] = place.name;
         fields[OPENING_HOURS_FIELD.fieldApiName] = this.getPlaceOpeningHours(place);
-        fields[OWNER_FIELD.fieldApiName] = this.ctrlData.dataOwnerId;
         fields[PHONE_FIELD.fieldApiName] = place.international_phone_number;
         fields[POSTAL_CODE_FIELD.fieldApiName] = this.getAddressComponentValue(place, 'postal_code');
         fields[STATE_FIELD.fieldApiName] = this.getAddressComponentValue(place, 'administrative_area_level_1');
