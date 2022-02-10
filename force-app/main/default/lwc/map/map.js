@@ -3,6 +3,7 @@ import LEAFLET from '@salesforce/resourceUrl/leaflet';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getMapConfig from '@salesforce/apex/MapService.getMapConfig';
+import { getRecord } from 'lightning/uiRecordApi';
 
 const DEFAULT_TILE_LAYER_URL_TEMPLATE = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const DEFAULT_TILE_LAYER_OPTIONS = {
@@ -17,6 +18,9 @@ const TOAST_INITIALIZATION_ERROR_DEFAULT_MESSAGE = "Map initialization failed";
 export default class Map extends LightningElement {
     @api contextName;
     @api featureName;
+    @api recordId;
+    @api objectApiName;
+    @api locationFieldApiName;
 
     isRendered = false;
     map = null;
@@ -26,6 +30,22 @@ export default class Map extends LightningElement {
     mapMarkers = null;
     privatePlaces = null;
     privateSelectedPlaceIdx = null;
+    privateRecord = null;
+    locationFields = []
+
+    @wire(getRecord, { recordId: '$recordId', fields: '$locationFields', isRendered: '$isRendered' })
+    wiredRecord({error, data}) {
+        if(data) {
+            this.privateRecord = data;
+            this.privatePlaces = [this.privateRecord];
+            
+            if(this.isRendered) {
+                this.prepareMarkers();
+            }
+        } else {
+            console.log(error);
+        }
+    }
 
     @api
     get places() {
@@ -52,6 +72,13 @@ export default class Map extends LightningElement {
         if(marker) {
             marker.openPopup();
             this.map.panTo(marker.getLatLng())
+        }
+    }
+
+    connectedCallback() {
+        if(this.locationFieldApiName) {
+            this.locationFields = [[this.objectApiName, this.locationFieldApiName.replace('__c', '') + '__Latitude__s'].join('.'), 
+                                [this.objectApiName, this.locationFieldApiName.replace('__c', '') + '__Longitude__s'].join('.')];
         }
     }
 
@@ -127,7 +154,7 @@ export default class Map extends LightningElement {
     initIcons() {
         this.icons = {};
 
-        (this.ctrlData.standardIcons || []).forEach(icon => {
+        (this.ctrlData.icons || []).forEach(icon => {
             this.icons[icon.name] = L.icon({
                 iconUrl: icon.iconUrl,
                 iconRetinaUrl: icon.iconRetinaUrl,

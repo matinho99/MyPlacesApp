@@ -31,7 +31,7 @@ public with sharing class MapService {
         List<Feature_Setting__mdt> settings;
 
         if(!Test.isRunningTest()){
-            settings = [SELECT Properties_JSON__c FROM Feature_Setting__mdt WHERE DeveloperName = :featureName];
+            settings = [SELECT Properties_JSON__c FROM Feature_Setting__mdt WHERE DeveloperName = :featureName AND Active__c = true];
         } else {
             settings = new List<Feature_Setting__mdt>();
 
@@ -58,11 +58,11 @@ public with sharing class MapService {
         public Map<String,Object> config;
 
         @AuraEnabled
-        public List<StandardIcon> standardIcons;
+        public List<StandardIcon> icons;
 
         public MapConfig(String contextName, String featureName) {
             this.config = getConfig(contextName, featureName);
-            this.standardIcons = STANDARD_ICONS;
+            this.icons = STANDARD_ICONS;
         }
     }
 

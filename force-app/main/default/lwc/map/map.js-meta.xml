@@ -5,12 +5,21 @@
     <targets>
         <target>lightning__AppPage</target>
         <target>lightning__HomePage</target>
-        <target>lightning__Tab</target>
+        <target>lightning__RecordPage</target>
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__HomePage">
             <property name="featureName" label="Feature Name" type="String" />
             <property name="contextName" label="Context Name" type="String" />
+        </targetConfig>
+        <targetConfig targets="lightning__RecordPage">
+            <property name="featureName" label="Feature Name" type="String" />
+            <property name="contextName" label="Context Name" type="String" />
+            <property name="locationFieldApiName" label="Location Field API Name" type="String" />
+            <supportedFormFactors>
+                <supportedFormFactor type="Large"/>
+                <supportedFormFactor type="Small"/>
+            </supportedFormFactors>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Place Record</label>
+    <protected>false</protected>
+    <values>
+        <field>Active__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Properties_JSON__c</field>
+        <value xsi:type="xsd:string">{
+  &quot;map&quot;: {
+    &quot;options&quot;: [
+      {
+        &quot;name&quot;: &quot;tap&quot;,
+        &quot;value&quot;: false
+      }
+    ],
+    &quot;features&quot;: [
+      {
+        &quot;name&quot;: &quot;places&quot;,
+        &quot;markerConfig&quot;: &quot;place&quot;
+      }
+    ],
+    &quot;markerConfigs&quot;: [
+      {
+        &quot;name&quot;: &quot;place&quot;,
+        &quot;coordinatesFunction&quot;: &quot;return [place.fields.Location__Latitude__s.value, place.fields.Location__Longitude__s.value];&quot;,
+        &quot;options&quot;: [
+          {
+            &quot;name&quot;: &quot;icon&quot;,
+            &quot;function&quot;: &quot;return icons.standardBlue;&quot;
+          }
+        ]
+      }
+    ]
+  }
+}</value>
+    </values>
+</CustomMetadata>
