@@ -12,7 +12,7 @@ public with sharing class PlaceSearchServiceTest {
         User appAdmin = [SELECT Id FROM User WHERE ProfileId = :AppConstants.APP_ADMIN_PROFILE.Id LIMIT 1];
         User appUser = [SELECT Id FROM User WHERE ProfileId = :AppConstants.APP_USER_PROFILE.Id LIMIT 1];
 
-        Place__c existingPlace = TestUtil.createPlace(new Place__c(Name = 'Shake Shack', Google_Place_Id__c = 'ChIJq3tH0I5YwokRfL6Y8j8E6DM'), true);
+        Place__c existingPlace = TestUtil.createPlace(new Place__c(Name = 'Shake Shack', Google_Place_Id__c = 'ChIJq3tH0I5YwokRfL6Y8j8E6DM', OwnerId = appUser.Id), true);
         Test.setMock(HttpCalloutMock.class, new PlaceSearchServiceMock());
 
         System.runAs(appUser) {

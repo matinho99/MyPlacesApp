@@ -114,7 +114,8 @@
           &quot;name&quot;: &quot;formatted_address&quot;,
           &quot;label&quot;: &quot;&quot;,
           &quot;icon&quot;: &quot;checkin&quot;,
-          &quot;type&quot;: &quot;address&quot;
+          &quot;type&quot;: &quot;address&quot;,
+          &quot;hrefFunction&quot;: &quot;return &apos;https://www.google.com/maps/search/?api=1&amp;query=&apos; + field.value + &apos;&amp;query_place_id=&apos; + record.place_id&quot;
         },
         {
           &quot;name&quot;: &quot;international_phone_number&quot;,
@@ -127,6 +128,24 @@
           &quot;label&quot;: &quot;&quot;,
           &quot;icon&quot;: &quot;world&quot;,
           &quot;type&quot;: &quot;url&quot;
+        },
+        {
+          &quot;valueFields&quot;: [
+            {
+              &quot;valueField&quot;: &quot;rating&quot;
+            },
+            {
+              &quot;value&quot;: &quot; (&quot;
+            },
+            {
+              &quot;valueField&quot;: &quot;user_ratings_total&quot;
+            },
+            {
+              &quot;value&quot;: &quot; ratings)&quot;
+            }
+          ],
+          &quot;label&quot;: &quot;&quot;,
+          &quot;icon&quot;: &quot;favorite&quot;
         }
       ],
       &quot;actions&quot;: [

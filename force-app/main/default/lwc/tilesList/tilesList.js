@@ -4,7 +4,6 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const TOAST_ERROR_TITLE = 'Error';
 const TOAST_ERROR_VARIANT = 'error';
-const GOOGLE_ADDRESS_LINK_TEMPLATE = 'https://www.google.com/maps/?q={query}';
 const SLDS_ICON_URL_TEMPLATE = '/_slds/icons/utility-sprite/svg/symbols.svg#{iconName}';
 
 export default class TilesList extends LightningElement {
@@ -85,7 +84,18 @@ export default class TilesList extends LightningElement {
 
         (this.ctrlData.config.tileLayout.fields || []).forEach(f => {
             let field = Object.assign({}, f);
-            field.value = record[f.name];
+
+            if(f.valueFields) {
+                field.value = '';
+
+                for(let i in f.valueFields) {
+                    let vf = f.valueFields[i];
+                    field.value += vf.valueField ? record[vf.valueField] : vf.value;
+                }
+            } else {
+                field.value = record[f.name];
+            }
+
             field.iconUrl = f.icon ? SLDS_ICON_URL_TEMPLATE.replace('{iconName}', f.icon) : null;
 
             field.isAddress = f.type === 'address';
@@ -95,7 +105,7 @@ export default class TilesList extends LightningElement {
             field.isUrl = f.type === 'url';
             field.isText = !field.isAddress && !field.isEmail && !field.isNumber && !field.isPhone && !field.isUrl;
 
-            field.href = field.isAddress ? GOOGLE_ADDRESS_LINK_TEMPLATE.replace('{query}', field.value) : null;
+            field.href = field.hrefFunction ? Function('record', 'field', field.hrefFunction)(record, field) : null;
             fields.push(field);
         });
 

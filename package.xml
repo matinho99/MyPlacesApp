@@ -84,10 +84,6 @@
         <name>RemoteSiteSetting</name>
     </types>
     <types>
-        <members>Place__c.*</members>
-        <name>SharingOwnerRule</name>
-    </types>
-    <types>
         <members>leaflet</members>
         <name>StaticResource</name>
     </types>
